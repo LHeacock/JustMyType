@@ -7,8 +7,13 @@ const $letter = $("#target-letter");
 const $yellow = $("#yellow-block");
 
 
+
 let numberOfWords = 0;
 let numberOfMistakes = 0;
+
+let startTime;
+let endTime;
+
 
 
 const yellowStartingPx = '15px';
@@ -60,6 +65,11 @@ $sentence.append(currentSentence);
 $letter.append(currentLetter);
 
 $("body").on("keypress", function (e) {
+    if (!startTime) {
+        startTime = Date.now()
+    }
+
+
     if (!currentLetter) {
         updateFeedbackForms();
     }
@@ -78,7 +88,7 @@ $("body").on("keypress", function (e) {
     }
     whereIsTheLetter++;
     currentLetter = currentSentence[whereIsTheLetter];
-    if (whereIsTheLetter > currentSentence.length) {
+    if (whereIsTheLetter >= currentSentence.length) {
         updateFeedbackForms();
     }
 
@@ -101,23 +111,27 @@ function updateFeedbackForms() {
 }
 
 function endGame() {
+
     $feedback.text('');
-    $feedback.append("You're accuracy was " + (numberOfWords / numberOfMistakes))
+    endTime = Date.now();
+    let difference = endTime - startTime;
+    let minutes = difference / (1000 * 60);
+    $feedback.append("You're accuracy was " + (numberOfWords / minutes - 2 * numberOfMistakes));
 }
 
-function progressGame(){
+function progressGame() {
     $letter.text('');
-    if(currentLetter == " ")
-    {
-        $letter.append("");
+    if (currentLetter == " ") {
+        $letter.append("Space");
     }
-    else{
+    else {
         $letter.append(currentLetter);
     }
-    
+
     let currentPositionText = $yellow.css("left").replace('px', '');
     let currentPositionNumber = parseInt(currentPositionText);
 
     $yellow.css("left", (currentPositionNumber + 15) + 'px')
 }
 
+O
